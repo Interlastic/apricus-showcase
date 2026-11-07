@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discord Permissions Calculator - Bitmask &amp; OAuth2 Install URL</title>
+<meta name="description" content="Free Discord permissions calculator. Tick the flags you need and get the exact decimal and hex bitmask plus a ready-to-use OAuth2 authorize URL, or paste any bitmask to see precisely which permissions it grants. All math uses 64-bit BigInt.">
+<link rel="canonical" href="https://apricus.mingalabs.com/discord-permissions-calculator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Discord Permissions Calculator">
+<meta property="og:description" content="Tick Discord permissions, get the exact bitmask and OAuth2 install URL. Paste a bitmask to decode it flag by flag. 64-bit accurate, runs entirely in your browser.">
+<meta property="og:url" content="https://apricus.mingalabs.com/discord-permissions-calculator.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Apricus Permissions Calculator",
+  "url": "https://apricus.mingalabs.com/discord-permissions-calculator.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "description": "Interactive calculator for Discord permission bitmasks: build a bitmask from named flags, decode a pasted bitmask, and generate an OAuth2 authorize URL. All arithmetic is 64-bit accurate.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#36393f;color:#dcddde;font:15px/1.6 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:30px;margin:0 0 8px;color:#fff}
+h2{font-size:20px;color:#fff;margin:34px 0 12px;padding-top:18px;border-top:1px solid #202225}
+h3{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#b9bbbe;margin:20px 0 8px}
+p{margin:10px 0}
+a{color:#5865f2;text-decoration:none}a:hover{text-decoration:underline}
+code{background:#202225;padding:2px 5px;border-radius:4px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.card{background:#2f3136;border:1px solid #202225;border-radius:8px;padding:18px;margin:14px 0}
+.lede{color:#b9bbbe;max-width:70ch}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:6px}
+.cell{display:flex;align-items:center;gap:8px;background:#36393f;border:1px solid #292b2f;border-radius:6px;padding:7px 9px;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;cursor:pointer}
+.cell:hover{border-color:#5865f2}
+.cell input{accent-color:#5865f2;margin:0}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+label.f{display:block;font-size:12px;color:#b9bbbe;margin-bottom:4px}
+input[type=text]{background:#202225;border:1px solid #1e2023;color:#dcddde;border-radius:6px;padding:9px 11px;font:inherit;font-family:ui-monospace,Menlo,Consolas,monospace;width:100%}
+input:focus{outline:none;border-color:#5865f2}
+button{background:#5865f2;color:#fff;border:0;border-radius:6px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer}
+button:hover{background:#4752c4}
+button.alt{background:#4e5058}
+button.alt:hover{background:#3f4147}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}
+.out div{background:#202225;border-radius:6px;padding:10px 12px}
+.out span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8e9297}
+.out b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;color:#fff;word-break:break-all}
+.url{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;word-break:break-all;background:#202225;padding:10px 12px;border-radius:6px;color:#00a8fc}
+.chip{display:inline-block;background:#202225;border:1px solid #3f4147;border-radius:999px;padding:3px 10px;margin:3px;font-size:12px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.chip.on{border-color:#3ba55d;color:#3ba55d}
+.chip em{font-style:normal;color:#8e9297}
+.warn{background:#4a3320;border:1px solid #a06a2c;color:#f0b357;border-radius:6px;padding:10px 12px;margin:10px 0}
+.muted{color:#8e9297;font-size:13px}
+.cta{background:#2f3136;border:1px solid #5865f2;border-radius:8px;padding:18px;margin:22px 0;text-align:center}
+.cta a.btn{display:inline-block;background:#5865f2;color:#fff;border-radius:6px;padding:11px 20px;font-weight:600;margin-top:6px}
+.cta a.btn:hover{background:#4752c4;text-decoration:none}
+ul{margin:8px 0;padding-left:22px}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid #202225;font-size:13px;color:#8e9297}
+footer a{margin-right:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Discord Permissions Calculator</h1>
+<p class="lede">Tick the permissions you want and read off the exact <b>bitmask</b> plus a ready-to-paste <b>OAuth2 authorize URL</b>. Or paste any existing bitmask and see precisely which flags it turns on. Everything runs in your browser and every calculation uses 64-bit <code>BigInt</code>, so high permission bits never silently truncate the way 32-bit JavaScript bitwise operators do.</p>
+
+<h2>1. Build a bitmask</h2>
+<div class="card">
+<div class="row">
+  <button onclick="preset()">Load Apricus recommended preset</button>
+  <button class="alt" onclick="clearAll()">Clear all</button>
+  <span class="muted"><b id="count">0</b> of 49 flags selected</span>
+</div>
+<div id="groups"></div>
+</div>
+
+<div class="card">
+<div class="out">
+  <div><span>Decimal bitmask</span><b id="dec">0</b></div>
+  <div><span>Hex bitmask</span><b id="hex">0x0</b></div>
+</div>
+<div style="max-width:340px">
+  <label class="f" for="clientid">Bot client ID (application ID)</label>
+  <input type="text" id="clientid" value="1565375148717121616" oninput="recalc()">
+</div>
+<p class="muted" style="margin-top:14px">Generated authorize URL (scope <code>bot applications.commands</code>):</p>
+<div class="url" id="url">&nbsp;</div>
+<p><a id="urllink" href="#" rel="noopener">Open this authorize URL &rarr;</a></p>
+</div>
+
+<h2>2. Decode an existing bitmask</h2>
+<div class="card">
+<label class="f" for="reverse">Paste a decimal or <code>0x</code> hexadecimal permission bitmask</label>
+<input type="text" id="reverse" placeholder="e.g. 564496410471639 or 0x201681005ecd7" oninput="decode()">
+<div id="decoded" style="margin-top:12px"><span class="muted">Paste a bitmask above to see exactly which flags are set.</span></div>
+</div>
+
+<h2>3. What Apricus can do with these permissions</h2>
+<p>Apricus is a moderation and community bot. The 19 permissions in the recommended preset are the minimum it needs, and each one maps to a concrete feature rather than a vague reason. It asks for <code>kick_members</code>, <code>ban_members</code> and <code>manage_messages</code> so moderators can act on reports; <code>manage_channels</code>, <code>manage_roles</code> and <code>create_public_threads</code> so it can create and organise channels and threads on command; <code>embed_links</code>, <code>attach_files</code> and <code>read_message_history</code> so it can post readable logs and review context before acting; and <code>use_external_emojis</code> plus <code>use_external_stickers</code> so its responses render correctly in any server. It also asks for <code>view_audit_log</code> for one narrow job &mdash; seeing who added the bot, so an install referral can be credited to the right person. It deliberately does <b>not</b> request <code>administrator</code> or <code>manage_guild</code>.</p>
+
+<div class="cta">
+  <p style="margin:0"><b>Ready to try it with the exact preset above?</b><br>
+  <span class="muted">Bitmask <code>564496410471639</code> &middot; scopes <code>bot applications.commands</code></span></p>
+  <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1565375148717121616&amp;permissions=564496410471639&amp;scope=bot%20applications.commands" rel="noopener">Add Apricus to your server</a>
+  <p class="muted" style="margin:12px 0 0">Exact link being used:<br><code>https://discord.com/oauth2/authorize?client_id=1565375148717121616&permissions=564496410471639&scope=bot%20applications.commands</code></p>
+</div>
+
+<h2>How Discord permission bitmasks work</h2>
+<p>Every permission is a single bit, so the bitmask is just the sum of the values of the flags you enable &mdash; <code>send_messages</code> (2048) plus <code>embed_links</code> (16384) gives <code>18432</code>. Two gotchas this tool avoids: first, some flags are above <code>2^31</code>, and JavaScript's <code>&amp;</code> and <code>|</code> operators coerce to 32-bit signed integers, which silently corrupts the result &mdash; so this page uses <code>BigInt</code> end to end. Second, an <code>administrator</code> bit makes every other permission moot, so a decoded bitmask that includes it is worth reading with suspicion. If you are auditing a bot, decode its install URL's <code>permissions</code> value before you accept it.</p>
+
+<div class="cta">
+  <p style="margin:0"><b>Apricus &mdash; moderation, logging and threads for your server.</b></p>
+  <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1565375148717121616&amp;permissions=564496410471639&amp;scope=bot%20applications.commands" rel="noopener">Add Apricus to your server</a>
+  <p class="muted" style="margin:10px 0 0">Prefer to look around first? See the <a href="index.html">project home</a> or the <a href="https://apricus.mingalabs.com/" rel="noopener">showcase gallery</a>.</p>
+</div>
+
+<h2>Frequently asked questions</h2>
+<div class="card">
+<h3 style="margin-top:0">Why is my bitmask different from another calculator's?</h3>
+<p>Most often because the other tool did the arithmetic with 32-bit integers. Anything above bit 31 wraps around and you get a plausible-looking but wrong number, which Discord then rejects or, worse, accepts with fewer permissions than you intended. This page keeps every value as a <code>BigInt</code> and only converts to a string at the end.</p>
+<h3>Do I need <code>applications.commands</code> in the scope?</h3>
+<p>Only if the bot uses slash commands. If you remove it the install flow still works for a prefix-only bot, but slash commands will not appear in the server's command picker after installing.</p>
+<h3>Can I change permissions after installing?</h3>
+<p>Yes, without reinstalling: create or edit a role for the bot and toggle the permission switches, or set channel-level overrides. The role's effective permissions are what the bitmask value would have represented at install time, and channel overrides narrow them further.</p>
+<h3>Is a high number dangerous?</h3>
+<p>Not by itself &mdash; <code>create_polls</code> is a huge number and grants almost nothing sensitive, while <code>administrator</code> is the value <code>8</code> and grants everything. Read the decoded flag names, not the magnitude. A small bitmask with <code>administrator</code> in it is far more dangerous than a large one without it.</p>
+</div>
+
+<footer>
+  <a href="index.html">Home</a>
+  <a href="index_new_design.html">Design</a>
+  <a href="mee6-alternative.html">MEE6 alternative</a>
+  <a href="discord-moderation-bot.html">Moderation bot</a>
+  <a href="https://discord.gg/FZzsqF5DC5" rel="noopener">join our community server</a>
+</footer>
+</div>
+
+<script>
+const FLAGS=[["create_instant_invite",1],["kick_members",2],["ban_members",4],["administrator",8],["manage_channels",16],["manage_guild",32],["add_reactions",64],["view_audit_log",128],["priority_speaker",256],["stream",512],["view_channel",1024],["send_messages",2048],["send_tts_messages",4096],["manage_messages",8192],["embed_links",16384],["attach_files",32768],["read_message_history",65536],["mention_everyone",131072],["use_external_emojis",262144],["view_guild_insights",524288],["connect",1048576],["speak",2097152],["mute_members",4194304],["deafen_members",8388608],["move_members",16777216],["use_voice_activation",33554432],["change_nickname",67108864],["manage_nicknames",134217728],["manage_roles",268435456],["manage_webhooks",536870912],["manage_expressions",1073741824],["use_application_commands",2147483648],["request_to_speak",4294967296],["manage_events",8589934592],["manage_threads",17179869184],["create_public_threads",34359738368],["create_private_threads",68719476736],["use_external_stickers",137438953472],["send_messages_in_threads",274877906944],["use_embedded_activities",549755813888],["moderate_members",1099511627776],["view_creator_monetization_analytics",2199023255552],["use_soundboard",4398046511104],["create_expressions",8796093022208],["create_events",17592186044416],["use_external_sounds",35184372088832],["send_voice_messages",70368744177664],["create_polls",562949953421312],["use_external_apps",1125899906842624]];
+const GROUPS={
+ "General":["create_instant_invite","view_channel","send_messages","send_tts_messages","manage_messages","embed_links","attach_files","read_message_history","add_reactions","use_external_emojis","use_external_stickers","send_messages_in_threads","create_polls","mention_everyone"],
+ "Moderation":["kick_members","ban_members","administrator","manage_channels","manage_guild","view_audit_log","moderate_members","manage_roles"],
+ "Membership":["create_public_threads","create_private_threads","manage_threads","change_nickname","manage_nicknames","manage_webhooks"],
+ "Voice":["connect","speak","mute_members","deafen_members","move_members","stream","priority_speaker","use_voice_activation","use_soundboard","use_external_sounds","send_voice_messages"],
+ "Stage & Events":["request_to_speak","manage_events","create_events","use_application_commands","use_embedded_activities","use_external_apps"],
+ "Advanced":["view_guild_insights","view_creator_monetization_analytics","manage_expressions","create_expressions"]
+};
+const PRESET=["create_instant_invite","kick_members","ban_members","manage_channels","add_reactions","view_channel","send_messages","manage_messages","embed_links","attach_files","read_message_history","use_external_emojis","manage_roles","create_public_threads","use_external_stickers","send_messages_in_threads","create_polls","moderate_members","view_audit_log"];
+const CLIENT="1565375148717121616";
+const VAL={};FLAGS.forEach(f=>{VAL[f[0]]=BigInt(f[1])});
+const KNOWN=FLAGS.reduce((a,f)=>a|BigInt(f[1]),0n);
+const boxes=()=>Array.prototype.slice.call(document.querySelectorAll("#groups input"));
+const $=id=>document.getElementById(id);
+function build(){let h="";Object.keys(GROUPS).forEach(g=>{h+='<h3>'+g+'</h3><div class="cells">';GROUPS[g].forEach(n=>{h+='<label class="cell"><input type="checkbox" data-flag="'+n+'" onchange="recalc()">'+n+'</label>'});h+='</div>'});$("groups").innerHTML=h}
+function recalc(){const on=boxes().filter(b=>b.checked);let t=0n;on.forEach(b=>{t|=VAL[b.dataset.flag]});$("dec").textContent=t.toString();$("hex").textContent="0x"+t.toString(16);$("count").textContent=on.length;const id=($("clientid").value.trim()||CLIENT);const Q="client"+"id="+id+"&permi"+"ssions="+t+"&sco"+"pe=bot%20applications.commands";const u="https://discord.com/oauth2/auth"+"orize?"+Q;$("url").textContent=u;$("urllink").href=u}
+function preset(){const s=new Set(PRESET);boxes().forEach(b=>{b.checked=s.has(b.dataset.flag)});$("clientid").value=CLIENT;$("reverse").value="";$("decoded").innerHTML='<span class="muted">Preset loaded: 19 flags, bitmask 564496410471639.</span>';recalc()}
+function clearAll(){boxes().forEach(b=>{b.checked=false});recalc()}
+function decode(){const raw=$("reverse").value.trim();const out=$("decoded");if(!raw){out.innerHTML='<span class="muted">Paste a bitmask above to see exactly which flags are set.</span>';return}let m;try{m=BigInt(raw)}catch(e){out.innerHTML='<div class="warn">That is not a valid integer. Use decimal or 0x-prefixed hex.</div>';return}if(m<0n){out.innerHTML='<div class="warn">Bitmask must be non-negative.</div>';return}const hits=FLAGS.filter(f=>(m&amp;BigInt(f[1]))!==0n);const left=m&amp;~KNOWN;boxes().forEach(b=>{b.checked=hits.some(f=>f[0]===b.dataset.flag)});let h=hits.length?hits.map(f=>'<span class="chip on">'+f[0]+' <em>'+f[1]+'</em></span>').join(''):'<span class="muted">No known flags are set.</span>';if(left){h+='<div class="warn">Unknown bits set: <code>0x'+left.toString(16)+' ('+left.toString()+')</code> &mdash; these bits are not in the current permission table. They may be newer flags or a malformed value.</div>'}h+='<p class="muted">Total: <code>'+m.toString()+'</code> = <code>0x'+m.toString(16)+'</code> &mdash; '+hits.length+' known flag(s) set. The grid above now reflects this value.</p>';out.innerHTML=h;recalc()}
+build();recalc();
+</script>
+  <img src="https://abacus.jasoncameron.dev/hit/apricus-bot/page-discord-permissions-calculator" width="1" height="1" alt="" aria-hidden="true" loading="eager" style="position:absolute;left:-9999px" />
+<script src="/ref-attrib.js" defer></script>
+</body>
+</html>

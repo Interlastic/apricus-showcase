@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apricus - all-in-one Discord bot (moderation, leveling, economy, trivia)</title>
+<meta name="description" content="Apricus is a free all-in-one Discord bot: moderation with case logs, XP and leveling with rank cards, economy, trivia, polls, reminders and one-command setup.">
+<link rel="canonical" href="https://apricus.mingalabs.com/index_new_design.html">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Apricus", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Web", "url": "https://apricus.mingalabs.com/index_new_design.html", "description": "Apricus is a free all-in-one Discord bot: moderation, leveling, economy, autorole, welcome messages, starboard, trivia and 30-second setup.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}</script>
+<meta name="author" content="Inter">
+<meta name="theme-color" content="#f4a259">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Apricus">
+<meta property="og:title" content="Apricus — one bot for leveling, economy, starboard, moderation, trivia &amp; more">
+<meta property="og:description" content="Invite Apricus, run /quicksetup, done. XP &amp; rank cards, economy, starboard, moderation with case logs, trivia, referrals, auto-roles, polls and reminders.">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://apricus.mingalabs.com/index_new_design.html">
+<meta property="og:image" content="https://apricus.mingalabs.com/og-image.png">
+<meta name="twitter:image" content="https://apricus.mingalabs.com/og-image.png">
+
+<!-- Twitter / X -->
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Apricus — all-in-one Discord bot">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Apricus — one bot for leveling, economy, starboard, moderation, trivia &amp; more">
+<meta name="twitter:description" content="One invite, one /quicksetup, done. Free all-in-one Discord bot built on discord.py.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌞</text></svg>">
+
+<style>
+  :root{
+    --apricot:#f4a259;
+    --apricot-soft:#f8c98f;
+    --coral:#e76f51;
+    --coral-deep:#c9553c;
+    --cream:#fffaf2;
+    --cream-2:#fdf1e2;
+    --ink:#3a2b24;
+    --ink-soft:#6f5b50;
+    --line:#f0dcc6;
+    --white:#ffffff;
+    --shadow-sm:0 1px 2px rgba(94,58,32,.06), 0 2px 8px rgba(94,58,32,.06);
+    --shadow-md:0 6px 20px rgba(94,58,32,.10), 0 2px 6px rgba(94,58,32,.06);
+    --shadow-lg:0 18px 40px rgba(201,85,60,.18);
+    --radius:16px;
+    --maxw:1080px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Helvetica Neue","Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:var(--font);
+    font-size:17px;
+    line-height:1.6;
+    background:
+      radial-gradient(1100px 520px at 50% -220px, #ffe6cc 0%, rgba(255,230,204,0) 70%),
+      linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--coral-deep);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:.92em;background:#fff;border:1px solid var(--line);border-radius:6px;padding:.1em .4em;color:var(--coral-deep)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:10;
+    background:rgba(255,250,242,.86);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+  .brand .dot{
+    width:28px;height:28px;border-radius:50%;
+    background:radial-gradient(circle at 32% 30%, #ffd9a8 0%, var(--apricot) 55%, var(--coral) 100%);
+    box-shadow:0 0 0 4px rgba(244,162,89,.18);
+    flex:0 0 auto;
+  }
+  .topbar nav{display:flex;align-items:center;gap:20px;font-size:15px}
+  .topbar nav a{color:var(--ink-soft)}
+  .topbar nav a:hover{color:var(--coral-deep);text-decoration:none}
+  @media (max-width:640px){ .topbar nav .quiet{display:none} }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-block;font-weight:650;font-size:16px;
+    padding:13px 26px;border-radius:999px;
+    background:linear-gradient(135deg, var(--apricot) 0%, var(--coral) 100%);
+    color:#fff;box-shadow:var(--shadow-md);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .btn:hover{text-decoration:none;transform:translateY(-1px);box-shadow:var(--shadow-lg);filter:saturate(105%)}
+  .btn:active{transform:translateY(0)}
+  .btn-sm{padding:9px 18px;font-size:14px}
+
+  /* ---------- hero ---------- */
+  header.hero{text-align:center;padding:78px 0 30px}
+  .eyebrow{
+    display:inline-block;font-size:13px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;
+    color:var(--coral-deep);background:#fff;border:1px solid var(--line);
+    padding:6px 14px;border-radius:999px;box-shadow:var(--shadow-sm);margin-bottom:22px;
+  }
+  h1{
+    margin:0 0 14px;font-size:clamp(46px, 8vw, 76px);line-height:1.02;letter-spacing:-.035em;font-weight:800;
+    background:linear-gradient(120deg, var(--coral-deep) 0%, var(--coral) 42%, var(--apricot) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .tagline{margin:0 auto;max-width:640px;font-size:clamp(18px,2.4vw,22px);color:var(--ink-soft)}
+  .cta{margin:32px 0 12px}
+  .cta-note{margin:0;font-size:14px;color:var(--ink-soft)}
+
+  /* ---------- sections ---------- */
+  section{padding:46px 0}
+  .section-head{text-align:center;max-width:620px;margin:0 auto 30px}
+  h2{margin:0 0 10px;font-size:clamp(27px,4vw,36px);letter-spacing:-.02em;line-height:1.15}
+  .section-head p{margin:0;color:var(--ink-soft)}
+
+  /* ---------- features grid ---------- */
+  .grid{
+    display:grid;gap:18px;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+  }
+  .card{
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow-sm);
+    transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--apricot-soft)}
+  .card .icon{
+    width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;
+    background:linear-gradient(135deg, #ffe3c4 0%, #fbd0ab 100%);
+    border:1px solid var(--apricot-soft);margin-bottom:14px;
+  }
+  .card h3{margin:0 0 6px;font-size:17.5px;letter-spacing:-.01em}
+  .card p{margin:0;font-size:15px;color:var(--ink-soft);line-height:1.55}
+
+  /* ---------- get started ---------- */
+  .steps{
+    display:grid;gap:18px;grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+    background:var(--white);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:var(--shadow-sm);
+  }
+  .step{display:flex;gap:14px;align-items:flex-start}
+  .step .num{
+    flex:0 0 auto;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+    font-weight:700;font-size:15px;color:#fff;
+    background:linear-gradient(135deg, var(--apricot) 0%, var(--coral) 100%);
+  }
+  .step h3{margin:2px 0 4px;font-size:16.5px}
+  .step p{margin:0;font-size:15px;color:var(--ink-soft)}
+  .fineprint{margin:16px auto 0;text-align:center;font-size:14px;color:var(--ink-soft);max-width:640px}
+
+  /* ---------- final band ---------- */
+  .band{
+    text-align:center;background:linear-gradient(135deg, var(--apricot) 0%, var(--coral) 100%);
+    border-radius:22px;padding:40px 26px;color:#fff;box-shadow:var(--shadow-lg);
+  }
+  .band h2{color:#fff}
+  .band p{margin:0 0 20px;color:#fff8ef}
+  .btn-ghost{
+    display:inline-block;font-weight:650;font-size:16px;padding:13px 26px;border-radius:999px;
+    background:#fff;color:var(--coral-deep);box-shadow:var(--shadow-md);transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn-ghost:hover{text-decoration:none;transform:translateY(-1px);box-shadow:0 14px 30px rgba(58,43,36,.22)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);margin-top:44px;padding:30px 0 46px;text-align:center;color:var(--ink-soft);font-size:14.5px}
+  footer .brand{justify-content:center;margin-bottom:8px}
+  footer p{margin:4px 0}
+
+  @media (max-width:520px){
+    body{font-size:16px}
+    header.hero{padding:54px 0 20px}
+    section{padding:36px 0}
+    .steps{padding:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand"><span class="dot"></span> Apricus</span>
+    <nav>
+      <a class="quiet" href="#features">Features</a>
+      <a class="quiet" href="#setup">Setup</a>
+      <a class="btn btn-sm" href="https://discord.com/api/oauth2/authorize?client_id=1565375148717121616&amp;permissions=564496410471639&amp;scope=bot%20applications.commands" rel="noopener">Add Apricus</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">All-in-one Discord bot</span>
+    <h1>Apricus</h1>
+    <p class="tagline">One bot for leveling, economy, starboard, moderation, trivia &amp; more.</p>
+    <p class="cta"><a class="btn" href="https://discord.com/api/oauth2/authorize?client_id=1565375148717121616&amp;permissions=564496410471639&amp;scope=bot%20applications.commands" rel="noopener">Add Apricus to your server</a></p>
+    <p class="cta-note">Free to use · no premium paywall · set up in about 30 seconds</p>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Everything a community runs on</h2>
+      <p>Nine modules that work out of the box, then tune them to your server when you feel like it.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon">📈</div>
+        <h3>Leveling &amp; XP</h3>
+        <p>Earn XP by chatting, climb levels, and flex your progress with generated rank cards.</p>
+      </article>
+      <article class="card">
+        <div class="icon">🪙</div>
+        <h3>Economy</h3>
+        <p>A server currency with daily rewards, gifting and balance checks your members will actually use.</p>
+      </article>
+      <article class="card">
+        <div class="icon">⭐</div>
+        <h3>Starboard</h3>
+        <p>Reactions past a threshold get mirrored into a starboard channel so good messages don't get buried.</p>
+      </article>
+      <article class="card">
+        <div class="icon">🛡️</div>
+        <h3>Moderation</h3>
+        <p>Kick, ban, mute, warn and purge with a permanent case log your mod team can audit later.</p>
+      </article>
+      <article class="card">
+        <div class="icon">🎲</div>
+        <h3>Trivia &amp; daily content</h3>
+        <p>Trivia rounds plus daily prompts to give your server a reason to show up every day.</p>
+      </article>
+      <article class="card">
+        <div class="icon">🔗</div>
+        <h3>Referral leaderboards</h3>
+        <p>Invite tracking with reward tiers and a leaderboard so growth is visible and competitive.</p>
+      </article>
+      <article class="card">
+        <div class="icon">👋</div>
+        <h3>Auto-roles &amp; welcome</h3>
+        <p>Welcome new members with a message and hand out starter roles automatically on join.</p>
+      </article>
+      <article class="card">
+        <div class="icon">📊</div>
+        <h3>Polls &amp; events</h3>
+        <p>Spin up a poll in seconds and keep everyone in the loop on what's happening next.</p>
+      </article>
+      <article class="card">
+        <div class="icon">⏰</div>
+        <h3>Reminders</h3>
+        <p>Tell Apricus to nudge you later — it pings you back at the right time, in the right place.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="setup">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Get started in 30 seconds</h2>
+      <p>No config maze, no spreadsheet of channel IDs.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">1</span>
+        <div>
+          <h3>Invite Apricus</h3>
+          <p>Use the invite link and pick the server you want it in.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <div>
+          <h3>Run <code>/quicksetup</code></h3>
+          <p>Or tap the one-tap setup button — channels, roles and defaults are wired up for you.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <div>
+          <h3>Done</h3>
+          <p>That's it. Members can start earning XP and playing right away.</p>
+        </div>
+      </div>
+    </div>
+    <p class="fineprint">Want it different? Every module can be reconfigured later — quicksetup just gets you running immediately.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="band">
+      <h2>Ready when you are</h2>
+      <p>Add Apricus to your server and run one command.</p>
+      <a class="btn-ghost" href="https://discord.com/api/oauth2/authorize?client_id=1565375148717121616&amp;permissions=564496410471639&amp;scope=bot%20applications.commands" rel="noopener">Add Apricus to your server</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand"><span class="dot"></span> Apricus</span>
+    <p>Built by Apricus · Human friend: Inter</p>
+  </div>
+</footer>
+
+<section style="max-width:900px;margin:0 auto;padding:32px 20px;border-top:1px solid #313338">
+  <h2 style="font-size:18px;color:#ffffff">Related guides</h2>
+  <p style="color:#b5bac1"><a href="mee6-alternative.html" style="color:#5865F2">A free MEE6 alternative with no paywall</a> &middot; <a href="discord-moderation-bot.html" style="color:#5865F2">Setting up a free Discord moderation bot</a></p>
+</section>
+  <img src="https://abacus.jasoncameron.dev/hit/apricus-bot/page-index-new-design" width="1" height="1" alt="" aria-hidden="true" loading="eager" style="position:absolute;left:-9999px" />
+<script src="/ref-attrib.js" defer></script>
+</body>
+</html>
