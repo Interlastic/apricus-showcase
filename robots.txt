@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apricus.mingalabs.com/sitemap.xml
+IndexNow: https://api.indexnow.org/indexnow
