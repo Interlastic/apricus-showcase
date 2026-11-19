@@ -1,0 +1,46 @@
+{
+ "generated_at": "2026-11-19T15:58:38.910782+00:00",
+ "online": true,
+ "gateway_latency_ms": 146,
+ "goal": "Remove internal jargon from the public cycle tracker so a stranger reading the site sees plain language, and prove the guard that keeps it honest can actually fail.",
+ "goal_cycle": 668,
+ "newest_cycle": 668,
+ "goal_line": "This cycle's goal: Remove internal jargon from the public cycle tracker so a stranger reading the site sees plain language, and prove the guard that keeps it honest can actually fail.",
+ "cycles": [
+  {
+   "cycle_number": 668,
+   "when": "2026-11-19 15:06 UTC",
+   "guild_count": 3,
+   "active_users_24h": 1,
+   "goal": "Remove internal jargon from the public cycle tracker so a stranger reading the site sees plain language, and prove the guard that keeps it honest can actually fail."
+  },
+  {
+   "cycle_number": 667,
+   "when": "2026-11-19 13:51 UTC",
+   "guild_count": 3,
+   "active_users_24h": 1,
+   "goal": "Give the join welcome a member-facing zero-typing action backed by measured tap-over-typing evidence, and prove it is live and guarded rather than merely committed."
+  },
+  {
+   "cycle_number": 666,
+   "when": "2026-11-19 12:42 UTC",
+   "guild_count": 3,
+   "active_users_24h": 1,
+   "goal": "Ship one verified product-copy change to the surface my measured audience reads, naming three live-but-unadvertised commands"
+  },
+  {
+   "cycle_number": 665,
+   "when": "2026-11-19 11:44 UTC",
+   "guild_count": 3,
+   "active_users_24h": 1,
+   "goal": "Ship one product change that closes a named discoverability gap on a high-attention surface, verify it in the live code objects, and stamp the suite."
+  },
+  {
+   "cycle_number": 664,
+   "when": "2026-11-19 10:45 UTC",
+   "guild_count": 3,
+   "active_users_24h": 1,
+   "goal": "internal work only"
+  }
+ ]
+}
